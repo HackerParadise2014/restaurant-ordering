@@ -10,5 +10,11 @@
   <%= @order.user_id %>
 </p>
 
+<ol>
+<% @order.lines.each do |line| %>
+     <li><%= line.name %> - <%= line.price %></li>
+<% end %>
+</ol>
+
 <%= link_to 'Edit', edit_order_path(@order) %> |
 <%= link_to 'Back', orders_path %>

@@ -24,10 +24,20 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-    @order = Order.new(order_params)
+
+    order_hash = JSON.parse(params[:order])
+
+    if Order.last.created_at > Time.now-30.minutes
+      @order = Order.last
+    else
+      @order = Order.new(meal_type: order_hash['type'])
+    end
+
+    line = @order.lines.new(category: '', name: order_hash['item'], price: order_hash['price'])
 
     respond_to do |format|
       if @order.save
+        puts "ORDER SAVED! #{@order.attributes} and line #{line.attributes}"
         format.html { redirect_to @order, notice: 'Order was successfully created.' }
         format.json { render :show, status: :created, location: @order }
       else
