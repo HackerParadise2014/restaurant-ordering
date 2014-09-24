@@ -25,7 +25,11 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
 
-    order_hash = JSON.parse(params[:order])
+    if params[:order].is_a?(Hash)
+      order_hash = params[:order]
+    else
+      order_hash = JSON.parse(params[:order])
+    end
 
     if Order.last.created_at > Time.now-30.minutes
       @order = Order.last
